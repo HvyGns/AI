@@ -1,0 +1,529 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Profile | HCC & HCU</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary: #f8fafc;
+            --primary-light: #e2e8f0;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --text-main: #cbd5e1;
+            --text-light: #94a3b8;
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: var(--transition);
+            padding: 0 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        /* Header / Hero */
+        header {
+            background: linear-gradient(135deg, #1e3a8a, #0f172a);
+            color: #ffffff;
+            padding: 40px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] header {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid var(--border);
+        }
+
+        .header-content h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #93c5fd;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .institutions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .btn-theme {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-theme:hover {
+            background: var(--border);
+        }
+
+        /* Sections */
+        section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: var(--transition);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        /* Interactive Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Practice AI Spotlight Card */
+        .ai-spotlight {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 1px solid #bfdbfe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        [data-theme="dark"] .ai-spotlight {
+            background: linear-gradient(135deg, #172554, #1e1b4b);
+            border-color: #1e3a8a;
+        }
+
+        .ai-spotlight h3 {
+            color: #1e40af;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        [data-theme="dark"] .ai-spotlight h3 {
+            color: #60a5fa;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Core Focus & Tech Lists */
+        .grid-focus {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .focus-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .focus-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Custom Modal (Anti-Alert UI) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: var(--radius);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            transform: scale(0.9);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        /* Forms */
+        form {
+            display: grid;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-main);
+            color: var(--text-main);
+            border-radius: 8px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 25px;
+            }
+            .header-content h1 {
+                font-size: 1.75rem;
+            }
+            section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Controls (Theme Toggle) -->
+        <div class="controls">
+            <button class="btn-theme" id="themeToggle" aria-label="Toggle dark mode">
+                <span id="themeIcon">🌙</span> <span id="themeText">Dark Mode</span>
+            </button>
+        </div>
+
+        <!-- Academic Header -->
+        <header>
+            <div class="header-content">
+                <h1>Faculty & Research Bio</h1>
+                <div class="subtitle">Computer Science & Information Technology</div>
+                <div class="institutions">
+                    <span class="badge">Houston Community College (HCC)</span>
+                    <span class="badge">Houston Christian University (HCU)</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic AI Spotlight Card Linking to practice_ai.html -->
+        <section class="ai-spotlight">
+            <div>
+                <h3>Interactive AI Practice Hub</h3>
+                <p style="font-size: 0.95rem; opacity: 0.9;">Access the custom environment used for interactive testing, course labs, and instructional AI tasks.</p>
+            </div>
+            <div>
+                <a href="practice_ai.html" class="btn-primary">Go to Practice AI Hub &rarr;</a>
+            </div>
+        </section>
+
+        <!-- About Me Section -->
+        <section id="about">
+            <h2>About Me</h2>
+            <p style="margin-bottom: 15px;">
+                I am a professor and researcher serving both Houston Community College and Houston Christian University. My teaching curriculum and research focuses heavily on preparing students for next-generation system demands, secure technical architectures, and practical hands-on experience.
+            </p>
+            <p>
+                When I am not lecturing or working with deployment frameworks, you can typically find me sailing on the <em>Pinnacle</em> out in Seabrook, Texas.
+            </p>
+        </section>
+
+        <!-- Interactive Course Toggle Section (JS-Powered) -->
+        <section id="courses">
+            <h2>Course Schedules</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('hcc')">Houston Community College</button>
+                <button class="tab-btn" onclick="switchTab('hcu')">Houston Christian University</button>
+            </div>
+
+            <div id="hcc" class="tab-content active">
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="border-left: 4px solid var(--accent); padding-left: 15px;">
+                        <h4 style="font-size: 1.1rem; color: var(--primary);">COSC 1436 - Programming Fundamentals I</h4>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Introductory programming syntax, structural patterns, and architectural logic.</p>
+                    </div>
+                    <div style="border-left: 4px solid var(--accent); padding-left: 15px;">
+                        <h4 style="font-size: 1.1rem; color: var(--primary);">ITSY 1342 - Information Technology Security</h4>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Fundamentals of security configuration, vulnerability mitigation, and basic network defense.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="hcu" class="tab-content">
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="border-left: 4px solid var(--accent); padding-left: 15px;">
+                        <h4 style="font-size: 1.1rem; color: var(--primary);">CISM 3325 - Advanced Cybersecurity Operations</h4>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Advanced incident response methodologies, log analysis, and system hardening frameworks.</p>
+                    </div>
+                    <div style="border-left: 4px solid var(--accent); padding-left: 15px;">
+                        <h4 style="font-size: 1.1rem; color: var(--primary);">CISM 4350 - Artificial Intelligence Applications</h4>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Practical model implementations, neural architectures, and ethical technical alignments.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Expertise & Focus -->
+        <section id="expertise">
+            <h2>Technical Core Focus</h2>
+            <div class="grid-focus">
+                <div class="focus-card">
+                    <h4>Security Operations Center (SOC)</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">Structure, architectural tooling, incident workflows, and real-world triage methodologies.</p>
+                </div>
+                <div class="focus-card">
+                    <h4>Artificial Intelligence</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">Integrating generative frameworks, fine-tuning structures, and building secure student playrooms.</p>
+                </div>
+                <div class="focus-card">
+                    <h4>Sailing & Navigation</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">Recreational coastal pilotage and navigation around Galveston Bay and Seabrook, TX.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Contact Form -->
+        <section id="contact">
+            <h2>Contact Office</h2>
+            <form id="contactForm">
+                <div>
+                    <label for="name">Name</label>
+                    <input type="text" id="name" required placeholder="Your Name">
+                </div>
+                <div>
+                    <label for="email">Academic Email</label>
+                    <input type="email" id="email" required placeholder="your.email@school.edu">
+                </div>
+                <div>
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="4" required placeholder="Type your message here..."></textarea>
+                </div>
+                <div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Send Message</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Custom Notification Modal (No Browser Alerts) -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <h3 style="color: var(--accent); margin-bottom: 10px; font-size: 1.3rem;">Message Submitted</h3>
+                <p style="color: var(--text-main); margin-bottom: 20px;">Thank you! Your message has been safely logged. I will reply shortly.</p>
+                <button class="btn-primary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Academic Faculty. Serving HCC and HCU.</p>
+        </footer>
+    </div>
+
+    <!-- Interactive JS -->
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+                btn.getAttribute('onclick').includes(tabId)
+            );
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Light/Dark Theme Switcher
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const root = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                root.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+            } else {
+                root.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+            }
+        });
+
+        // Custom Modal Control
+        const contactForm = document.getElementById('contactForm');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            modalOverlay.classList.add('active');
+            contactForm.reset();
+        });
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
+
+```
