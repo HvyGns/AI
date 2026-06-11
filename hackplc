@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab: Industrial Exploitation & Hardening</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --panel-bg: #161b22;
+            --border-color: #30363d;
+            --text-color: #c9d1d9;
+            --accent-blue: #58a6ff;
+            --accent-green: #238636;
+            --accent-red: #da3633;
+            --terminal-green: #39ff14;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        header {
+            grid-column: span 2;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        h1 { color: var(--accent-blue); font-size: 1.8rem; }
+        h2 { color: #fff; font-size: 1.2rem; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;}
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Terminal Console */
+        .console {
+            background-color: #05070a;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 4px;
+            height: 250px;
+            overflow-y: auto;
+            color: var(--terminal-green);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .input-line {
+            display: flex;
+            background-color: #05070a;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            align-items: center;
+        }
+
+        .prompt { color: var(--accent-blue); margin-right: 10px; font-weight: bold; }
+        
+        input[type="text"] {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            width: 100%;
+            outline: none;
+        }
+
+        /* Process Display */
+        .process-window {
+            background-color: #05070a;
+            border: 1px solid var(--border-color);
+            height: 200px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .node {
+            border: 2px solid #8b949e;
+            padding: 10px;
+            background: #161b22;
+            text-align: center;
+            min-width: 100px;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+
+        .node.active { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(88,166,255,0.3); }
+        .node.compromised { border-color: var(--accent-red); box-shadow: 0 0 10px rgba(218,54,51,0.5); }
+        .node.hardened { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(35,134,54,0.5); }
+
+        .network-bus {
+            position: absolute;
+            width: 80%;
+            height: 4px;
+            background: #30363d;
+            top: 50%;
+            z-index: 1;
+        }
+
+        /* Instructions Typography */
+        .guide-text { font-family: sans-serif; line-height: 1.5; font-size: 0.95rem; }
+        .guide-text p, .guide-text ol { margin-bottom: 15px; }
+        .guide-text code { background: #30363d; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.85rem;}
+        
+        .code-block {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 0.85rem;
+            color: #e6edf3;
+        }
+
+        .btn {
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn:hover { background: #30363d; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Lab: Operational Technology (OT) Protocol Exploitation & Hardening</h1>
+    <div style="font-size: 0.8rem; color: #8b949e;">Prerequisites: Basic network scanning & Modbus architecture fundamentals.</div>
+</header>
+
+<div class="container">
+    
+    <div class="panel">
+        <h2>Live Topology & Process Monitor</h2>
+        <div class="process-window">
+            <div class="network-bus" id="netBus"></div>
+            <div class="node active" id="nodeHmi">Engineering Workstation<br><span style="color:#8b949e;">192.168.1.50</span></div>
+            <div class="node active" id="nodePlc">PLC (Modbus/TCP)<br><span style="color:#8b949e;">192.168.1.100</span></div>
+            <div class="node" id="nodeScada">Field Device (Coil 0001)<br><span id="coilStatus" style="color:var(--accent-green);">CLOSED</span></div>
+        </div>
+
+        <h2>Interactive Attack/Defense Terminal</h2>
+        <div class="console" id="termConsole">
+            --- Target Network Environment Initialized ---<br>
+            Type 'help' to review locally compiled lab utilities.<br><br>
+            student@ot-sandbox:~$ 
+        </div>
+        <div class="input-line">
+            <span class="prompt">student@ot-sandbox:~$</span>
+            <input type="text" id="termInput" autofocus autocomplete="off" stroke="none">
+        </div>
+    </div>
+
+    <div class="panel" style="background-color: #0d1117;">
+        <h2>Lab Guide: Modbus Protocol Vulnerabilities</h2>
+        <div class="guide-text" id="guideContent">
+            </div>
+    </div>
+</div>
+
+<script>
+    const termConsole = document.getElementById('termConsole');
+    const termInput = document.getElementById('termInput');
+    const guideContent = document.getElementById('guideContent');
+    const coilStatus = document.getElementById('coilStatus');
+    
+    const nodePlc = document.getElementById('nodePlc');
+    const nodeHmi = document.getElementById('nodeHmi');
+    const netBus = document.getElementById('netBus');
+
+    let currentPhase = "attack"; 
+    let plcHardened = false;
+
+    const guides = {
+        attack: `
+            <p><strong>PHASE 1: Red Team Exploitation</strong></p>
+            <p>Modern PLCs controlling critical physical machinery frequently route processes via legacy industrial framing like <strong>Modbus/TCP</strong>. This protocol contains zero native authentication mechanism.</p>
+            <p>Your objective is to run a network reconnaissance footprint scan against the subnet, discover the open operational registers, and inject an arbitrary payload directly to override safety valve <code>Coil 0001</code>.</p>
+            <p><strong>Step 1:</strong> Map the physical transport Layer. Scan the asset array to find the industrial protocol port.</p>
+            <code class="code-block">nmap -sV -p 502 192.168.1.100</code>
+            <p><strong>Step 2:</strong> Leverage our custom Python engine to discover register maps and push commands.</p>
+            <code class="code-block">python3 modbus_manipulator.py --target 192.168.1.100 --write-coil 1 --value 1</code>
+        `,
+        defense: `
+            <p><strong>PHASE 2: Blue Team Hardening & Remediation</strong></p>
+            <p>Superb. You have weaponized the lack of protocol architecture authentication. Now change hats. As an industrial engineer, you must fix this vulnerability.</p>
+            <p>Because modifying internal device microcode or upgrading physical hardware pipelines takes years on production floors, we remediate via network isolation boundaries and <strong>Deep Packet Inspection (DPI)</strong> architectures.</p>
+            <p><strong>Step 1:</strong> Configure the industrial firewall to explicitly limit modifications. Deploy a firewall ruleset allowing the Engineering Station (<code>192.168.1.50</code>) to write registers, while completely blocking external sources or non-whitelisted function codes.</p>
+            <code class="code-block">iptables -A INPUT -s 192.168.1.50 -p tcp --dport 502 -j ACCEPT</code>
+            <p>Deploy the defensive perimeter asset by typing:</p>
+            <code class="code-block">deploy-dpi-firewall</code>
+        `
+    };
+
+    function updateGuide() {
+        guideContent.innerHTML = guides[currentPhase];
+    }
+
+    termInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const command = this.value.trim();
+            logCommand(command);
+            processCommand(command);
+            this.value = '';
+        }
+    });
+
+    function logCommand(cmd) {
+        termConsole.innerHTML += `${cmd}<br>`;
+        termConsole.scrollTop = termConsole.scrollHeight;
+    }
+
+    function printOutput(text, type = 'normal') {
+        let color = 'var(--terminal-green)';
+        if (type === 'error') color = 'var(--accent-red)';
+        if (type === 'info') color = 'var(--accent-blue)';
+        
+        termConsole.innerHTML += `<span style="color:${color}">${text}</span><br>student@ot-sandbox:~$ `;
+        termConsole.scrollTop = termConsole.scrollHeight;
+    }
+
+    function processCommand(cmd) {
+        const parts = cmd.split(' ');
+        const baseCmd = parts[0];
+
+        if (baseCmd === 'help') {
+            printOutput("Available commands:<br> - nmap -sV -p 502 192.168.1.100<br> - python3 modbus_manipulator.py [options]<br> - deploy-dpi-firewall<br> - clear");
+            return;
+        }
+        if (baseCmd === 'clear') {
+            termConsole.innerHTML = 'student@ot-sandbox:~$ ';
+            return;
+        }
+
+        // Phase 1 Commands
+        if (baseCmd === 'nmap') {
+            if (cmd === 'nmap -sV -p 502 192.168.1.100') {
+                printOutput("Starting Nmap 7.92...<br>Nmap scan report for 192.168.1.100<br>PORT    STATE SERVICE VERSION<br>502/tcp open  modbus  Schneider Quantum PLC Modbus/TCP<br>MAC Address: 00:0A:9C:12:34:56", 'info');
+            } else {
+                printOutput("Error: Incorrect syntax or parameters. Check the Lab Guide for structural targets.", 'error');
+            }
+            return;
+        }
+
+        if (baseCmd === 'python3') {
+            if (cmd === 'python3 modbus_manipulator.py --target 192.168.1.100 --write-coil 1 --value 1') {
+                if (plcHardened) {
+                    netBus.style.backgroundColor = 'var(--accent-green)';
+                    setTimeout(() => netBus.style.backgroundColor = '#30363d', 1000);
+                    printOutput("CRITICAL ERROR: Connection dropped by peer. TCP RST received from inline mitigation firewall.", 'error');
+                } else {
+                    nodePlc.classList.remove('active');
+                    nodePlc.classList.add('compromised');
+                    coilStatus.textContent = "FORCED OPEN / OVERFLOW EVENT";
+                    coilStatus.style.color = 'var(--accent-red)';
+                    netBus.style.backgroundColor = 'var(--accent-red)';
+                    
+                    printOutput("Connecting to 192.168.1.100:502... Connected.<br>Sending Modbus PDU: Function Code 05 (Write Single Coil) -> Address: 0001, Value: FF00<br>Response Received: SUCCESS. Master state forced.", 'info');
+                    
+                    // Progress to phase 2
+                    setTimeout(() => {
+                        currentPhase = "defense";
+                        updateGuide();
+                        termConsole.innerHTML += "<br><span style='color:var(--accent-blue)'>[+] Red Team Objective Complete. Lab automatically shifting to Phase 2 Hardening. Check the right panel.</span><br>student@ot-sandbox:~$ ";
+                    }, 2500);
+                }
+            } else {
+                printOutput("Usage: python3 modbus_manipulator.py --target [IP] --write-coil [ADDR] --value [0/1]", 'error');
+            }
+            return;
+        }
+
+        // Phase 2 Commands
+        if (baseCmd === 'deploy-dpi-firewall') {
+            if (currentPhase !== 'defense') {
+                printOutput("Error: Infrastructure alignment mismatch. Complete the Red Team validation objective first.", 'error');
+                return;
+            }
+            plcHardened = true;
+            nodePlc.classList.remove('compromised');
+            nodePlc.classList.add('hardened');
+            coilStatus.textContent = "SECURED / NORMALIZED";
+            coilStatus.style.color = 'var(--accent-green)';
+            
+            printOutput("Applying IPTables & Snort inline policies...<br>[+] Deep Packet Inspection enabled for Modbus Protocol.<br>[+] Restricting access to Function Code 5 / 15 write states to designated IP: 192.168.1.50.<br>[+] Infrastructure hardened successfully.", 'info');
+            return;
+        }
+
+        printOutput(`bash: ${baseCmd}: command not found. Type 'help' for lab capabilities.`, 'error');
+    }
+
+    // Init
+    updateGuide();
+</script>
+</body>
+</html>
