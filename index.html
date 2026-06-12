@@ -11,6 +11,8 @@
             --primary-light: #1e293b;
             --accent: #2563eb;
             --accent-hover: #1d4ed8;
+            --success-accent: #16a34a;
+            --success-hover: #15803d;
             --text-main: #334155;
             --text-light: #64748b;
             --bg-main: #f8fafc;
@@ -25,6 +27,8 @@
             --primary-light: #e2e8f0;
             --accent: #3b82f6;
             --accent-hover: #60a5fa;
+            --success-accent: #22c55e;
+            --success-hover: #4ade80;
             --text-main: #cbd5e1;
             --text-light: #94a3b8;
             --bg-main: #0f172a;
@@ -182,32 +186,74 @@
             display: block;
         }
 
-        /* Practice AI Spotlight Card */
-        .ai-spotlight {
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
-            border: 1px solid #bfdbfe;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+        /* Dual Spotlight Grid Layout */
+        .spotlight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
+            margin-bottom: 30px;
         }
 
-        [data-theme="dark"] .ai-spotlight {
+        .spotlight-card {
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        /* Blue / Primary Spotlight Card */
+        .spotlight-card.blue {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-color: #bfdbfe;
+        }
+
+        [data-theme="dark"] .spotlight-card.blue {
             background: linear-gradient(135deg, #172554, #1e1b4b);
             border-color: #1e3a8a;
         }
 
-        .ai-spotlight h3 {
+        .spotlight-card.blue h3 {
             color: #1e40af;
             font-size: 1.25rem;
             margin-bottom: 8px;
         }
 
-        [data-theme="dark"] .ai-spotlight h3 {
+        [data-theme="dark"] .spotlight-card.blue h3 {
             color: #60a5fa;
         }
 
+        /* Emerald / Green Spotlight Card */
+        .spotlight-card.green {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-color: #bbf7d0;
+        }
+
+        [data-theme="dark"] .spotlight-card.green {
+            background: linear-gradient(135deg, #062f4f, #022c22);
+            border-color: #065f46;
+        }
+
+        .spotlight-card.green h3 {
+            color: #166534;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        [data-theme="dark"] .spotlight-card.green h3 {
+            color: #4ade80;
+        }
+
+        .spotlight-card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        /* Universal Button Framework */
         .btn-primary {
             background-color: var(--accent);
             color: #ffffff;
@@ -219,10 +265,29 @@
             display: inline-block;
             border: none;
             cursor: pointer;
+            text-align: center;
         }
 
         .btn-primary:hover {
             background-color: var(--accent-hover);
+        }
+
+        .btn-success {
+            background-color: var(--success-accent);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-success:hover {
+            background-color: var(--success-hover);
         }
 
         /* Core Focus & Tech Lists */
@@ -358,16 +423,30 @@
             </div>
         </header>
 
-        <!-- Dynamic AI Spotlight Card Linking to practice_ai.html -->
-        <section class="ai-spotlight">
-            <div>
-                <h3>Interactive AI Practice Hub</h3>
-                <p style="font-size: 0.95rem; opacity: 0.9;">Access the custom environment used for interactive testing, course labs, and instructional AI tasks.</p>
+        <!-- Dynamic AI Spotlight Grid (Symmetrically Aligned) -->
+        <div class="spotlight-grid">
+            <!-- Card 1: Interactive AI Practice Hub -->
+            <div class="spotlight-card blue">
+                <div>
+                    <h3>Interactive AI Practice Hub</h3>
+                    <p>Access the custom environment used for interactive testing, course labs, and instructional AI tasks.</p>
+                </div>
+                <div>
+                    <a href="practice_ai.html" class="btn-primary" style="width: 100%;">Go to Practice AI Hub &rarr;</a>
+                </div>
             </div>
-            <div>
-                <a href="practice_ai.html" class="btn-primary">Go to Practice AI Hub &rarr;</a>
+
+            <!-- Card 2: Academic Prompt Engineering Suite -->
+            <div class="spotlight-card green">
+                <div>
+                    <h3>Academic Prompt Suite</h3>
+                    <p>Generate highly structured, ADA-compliant lesson prompts for Cybersecurity, AI, and ICS SCADA security courses.</p>
+                </div>
+                <div>
+                    <a href="academic_prompt_generator.html" class="btn-success" style="width: 100%;">Open Prompt Suite &rarr;</a>
+                </div>
             </div>
-        </section>
+        </div>
 
         <!-- About Me Section -->
         <section id="about">
