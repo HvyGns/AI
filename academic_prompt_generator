@@ -1,0 +1,850 @@
+```html
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Prompt Engineering Suite - Cybersecurity, AI & ICS Security</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        cyber: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            950: '#052e16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom scrollbar and accessibility adjustments */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.5);
+            border-radius: 20px;
+        }
+        /* High visibility focus outlines for keyboard navigation */
+        *:focus-visible {
+            outline: 3px solid #0284c7 !important;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-200 font-sans flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-40 transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-brand-100 dark:bg-brand-900/50 rounded-lg text-brand-700 dark:text-brand-100">
+                    <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight">Academic Prompt Engineering Suite</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Cybersecurity, AI, & ICS Security Educator Toolkit</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle" 
+                        class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                        aria-label="Toggle light and dark mode">
+                    <i id="themeIcon" data-lucide="sun" class="w-5 h-5 text-slate-700 dark:text-slate-200"></i>
+                </button>
+                <div class="hidden md:flex flex-col items-end text-xs text-slate-500 dark:text-slate-400">
+                    <span class="font-semibold">Professor Portal</span>
+                    <span>ICS-AI-SEC-2026</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Input Form (5 Cols) -->
+        <section class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col space-y-5" aria-labelledby="form-title">
+            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+                <h2 id="form-title" class="text-md font-bold uppercase tracking-wider text-brand-600 dark:text-brand-100 flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5"></i> Prompt Parameters
+                </h2>
+                <!-- Preset Quick Load -->
+                <div class="relative inline-block text-left">
+                    <select id="presetSelect" class="text-xs bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md py-1 px-2 cursor-pointer focus:ring-2 focus:ring-brand-600 focus:outline-none" aria-label="Load course preset">
+                        <option value="">-- Load Course Preset --</option>
+                        <option value="ics">ICS Security (Modbus TCP)</option>
+                        <option value="ai">AI Security (Adversarial ML)</option>
+                        <option value="cyber">Network Security (Ransomware)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Scrollable input fields wrapper to maximize space layout -->
+            <div class="space-y-4 overflow-y-auto max-h-[70vh] pr-2 custom-scrollbar">
+                
+                <!-- Lesson Title -->
+                <div>
+                    <label for="lessonTitle" class="block text-sm font-semibold mb-1 text-slate-700 dark:text-slate-300">Lesson Title</label>
+                    <input type="text" id="lessonTitle" 
+                           class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 focus:ring-2 focus:ring-brand-600 focus:bg-white dark:focus:bg-slate-900 transition focus:outline-none" 
+                           placeholder="e.g., Analyzing Modbus TCP Exploits in Water Treatment PLCs">
+                </div>
+
+                <!-- Subject Domain & Student Level (Grid) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="lessonSubject" class="block text-sm font-semibold mb-1 text-slate-700 dark:text-slate-300">Domain / Subject</label>
+                        <select id="lessonSubject" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 focus:ring-2 focus:ring-brand-600 focus:outline-none">
+                            <option value="ICS/SCADA Security">ICS/SCADA Security</option>
+                            <option value="AI Security & Adversarial ML">AI Security</option>
+                            <option value="Defensive Cybersecurity">Defensive Cybersecurity</option>
+                            <option value="Offensive Security & Red Teaming">Offensive Security</option>
+                            <option value="Cryptographic Protocols">Cryptographic Protocols</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="studentLevel" class="block text-sm font-semibold mb-1 text-slate-700 dark:text-slate-300">Student Level</label>
+                        <select id="studentLevel" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 focus:ring-2 focus:ring-brand-600 focus:outline-none">
+                            <option value="Undergraduate (Junior/Senior)">Undergraduate (Junior/Senior)</option>
+                            <option value="Graduate (MS/PhD)">Graduate (MS/PhD)</option>
+                            <option value="Cybersecurity Professional">Cybersecurity Professional</option>
+                            <option value="Introductory / Sophomore">Introductory / Sophomore</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Learning Objectives Section -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Learning Objectives (Bloom's Taxonomy)</label>
+                        <button type="button" id="addObjectiveBtn" class="text-xs text-brand-600 dark:text-brand-100 hover:underline flex items-center gap-1" aria-label="Add learning objective">
+                            <i data-lucide="plus-circle" class="w-3 h-3"></i> Add Line
+                        </button>
+                    </div>
+                    <div id="objectivesContainer" class="space-y-2">
+                        <!-- Instantiated by JS -->
+                    </div>
+                </div>
+
+                <!-- Key Terms -->
+                <div>
+                    <label for="keyTerms" class="block text-sm font-semibold mb-1 text-slate-700 dark:text-slate-300">Key Technical Terms <span class="text-xs font-normal text-slate-400">(Comma separated)</span></label>
+                    <textarea id="keyTerms" rows="2" 
+                              class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 focus:ring-2 focus:ring-brand-600 transition focus:outline-none text-sm"
+                              placeholder="e.g., Modbus, Programmable Logic Controller (PLC), SCADA, Injection Attack"></textarea>
+                </div>
+
+                <!-- Pre-Test Questions Section -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Pre-Test Diagnostic Questions</label>
+                        <button type="button" id="addPretestBtn" class="text-xs text-brand-600 dark:text-brand-100 hover:underline flex items-center gap-1" aria-label="Add pre-test question">
+                            <i data-lucide="plus-circle" class="w-3 h-3"></i> Add Line
+                        </button>
+                    </div>
+                    <div id="pretestsContainer" class="space-y-2">
+                        <!-- Instantiated by JS -->
+                    </div>
+                </div>
+
+                <!-- Prompt Architecture Target Output -->
+                <div class="border-t border-slate-200 dark:border-slate-800 pt-4 grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="promptRole" class="block text-sm font-semibold mb-1 text-slate-700 dark:text-slate-300">Role / Persona</label>
+                        <select id="promptRole" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 focus:ring-2 focus:ring-brand-600 focus:outline-none text-sm">
+                            <option value="Socratic Tutor / Professor">Socratic Tutor</option>
+                            <option value="Malicious Threat Actor (Simulation)">Malicious Threat Actor</option>
+                            <option value="ICS Chief Information Security Officer">CISO Advisor</option>
+                            <option value="Compliance / NIST Audit Advisor">NIST Framework Auditor</option>
+                            <option value="Rigorous Exam Evaluator">Rigorous Evaluator</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="promptFormat" class="block text-sm font-semibold mb-1 text-slate-700 dark:text-slate-300">Required Deliverable</label>
+                        <select id="promptFormat" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 focus:ring-2 focus:ring-brand-600 focus:outline-none text-sm">
+                            <option value="Immersive Hands-on Lab Assignment & Sandbox tasks">Immersive Lab Guide</option>
+                            <option value="Detailed Interactive Case Study with unexpected failure modes">Detailed Case Study</option>
+                            <option value="Socratic Q&A conversation script with student evaluation criteria">Socratic Q&A Script</option>
+                            <option value="Self-contained grading rubric with dynamic failure paths">Dynamic Rubric</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Generation Action Button -->
+            <button id="generatePromptBtn" class="w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2" aria-label="Compile instructional prompt template">
+                <i data-lucide="cpu" class="w-5 h-5"></i> Compile Prompt Template
+            </button>
+        </section>
+
+        <!-- Right Column: Interactive Output Screen & AI Runner (7 Cols) -->
+        <section class="lg:col-span-7 flex flex-col space-y-6" aria-labelledby="output-title">
+            
+            <!-- Tab Navigation for the Output Console -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col flex-grow">
+                <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-5 py-3">
+                    <h2 id="output-title" class="text-md font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <i data-lucide="terminal" class="w-5 h-5"></i> Prompt Sandbox
+                    </h2>
+                    
+                    <div class="flex space-x-2">
+                        <button id="tabTemplateBtn" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-100 transition">
+                            1. Compiled Prompt Template
+                        </button>
+                        <button id="tabExecutionBtn" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                            2. Live AI Output Preview
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 1 Panel: Compiled Prompt Template -->
+                <div id="tabTemplatePanel" class="p-5 flex-grow flex flex-col space-y-4">
+                    <p class="text-sm text-slate-500 dark:text-slate-400">
+                        Copy this structured, high-context educational prompt to feed directly into ChatGPT, Gemini, or Claude to build academic coursework.
+                    </p>
+                    <div class="relative flex-grow min-h-[350px] flex flex-col">
+                        <label for="promptOutputTextarea" class="sr-only">Compiled Prompt Template Output</label>
+                        <textarea id="promptOutputTextarea" readonly
+                                  class="w-full flex-grow p-4 font-mono text-xs bg-slate-950 text-slate-200 dark:text-emerald-400 rounded-lg border border-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-brand-600"
+                                  placeholder="Configure parameters on the left and click 'Compile Prompt Template' to see output..."></textarea>
+                        
+                        <div class="absolute bottom-3 right-3 flex items-center space-x-2">
+                            <!-- Toast feedback inline -->
+                            <span id="toastFeedback" class="text-xs font-bold text-cyber-500 opacity-0 transition-opacity duration-300 pointer-events-none">Copied to clipboard!</span>
+                            <button id="copyPromptBtn" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-lg transition-all flex items-center gap-1.5 text-xs shadow" aria-label="Copy prompt to clipboard">
+                                <i data-lucide="clipboard" class="w-4 h-4"></i> Copy Template
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Direct Gemini API Simulation/Execution Runner -->
+                    <div class="bg-brand-50 dark:bg-brand-950/40 border border-brand-200 dark:border-brand-900/50 rounded-lg p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-brand-600 text-white rounded-lg hidden sm:block">
+                                <i data-lucide="zap" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold">Instantly execute with AI</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Generate the actual instructional lesson plan using Gemini 2.5 Flash.</p>
+                            </div>
+                        </div>
+                        <button id="executeAIBtn" class="px-4 py-2.5 bg-gradient-to-r from-brand-600 to-cyber-600 hover:from-brand-700 hover:to-cyber-700 text-white font-bold rounded-lg transition-all text-xs flex items-center gap-2 shadow" aria-label="Generate complete coursework using Gemini">
+                            <i data-lucide="terminal" class="w-4 h-4"></i> Execute Prompt with AI
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 2 Panel: Execution Output & Rendering -->
+                <div id="tabExecutionPanel" class="p-5 flex-grow flex flex-col space-y-4 hidden">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-sm font-bold flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-cyber-500 animate-pulse"></span>
+                                AI-Generated Course Material Output
+                            </h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Fleshed out content based on your exact objectives, pre-tests and terms.</p>
+                        </div>
+                        <button id="copyExecBtn" class="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded transition text-xs flex items-center gap-1" aria-label="Copy AI output">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Material
+                        </button>
+                    </div>
+
+                    <!-- Sandbox View Terminal -->
+                    <div class="relative flex-grow min-h-[400px] bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-300 overflow-y-auto custom-scrollbar" id="executionConsole">
+                        <div id="executionPlaceholder" class="text-center py-20 text-slate-500">
+                            <i data-lucide="brain-circuit" class="w-12 h-12 mx-auto mb-4 opacity-50"></i>
+                            <p>No material generated yet. Go to Tab 1 and click "Execute Prompt with AI" to trigger production.</p>
+                        </div>
+                        
+                        <!-- Dynamic Streaming/Execution Loader -->
+                        <div id="executionLoading" class="hidden flex flex-col items-center justify-center py-20 space-y-4">
+                            <div class="w-10 h-10 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+                            <div class="text-center">
+                                <p class="font-bold text-slate-100">Contacting Gemini LLM Engine...</p>
+                                <p class="text-slate-500 text-xxs mt-1">Applying pedagogical scaffolding with safe exponential backoff (Max 5 tries)</p>
+                            </div>
+                        </div>
+
+                        <!-- Generated Content Wrapper -->
+                        <div id="executionResultText" class="hidden space-y-4 whitespace-pre-wrap leading-relaxed select-text text-sm">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pedagogical Guidelines Panel -->
+            <div class="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex gap-4 items-start shadow-sm">
+                <span class="p-2 bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 rounded-lg shrink-0">
+                    <i data-lucide="award" class="w-5 h-5"></i>
+                </span>
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Professor Guidelines: Scaffolding</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                        Ensure all diagnostic <strong>Pre-Test</strong> questions demand foundational pre-requisites (e.g. baseline protocol formats) to identify student readiness before hitting dynamic failure modes in the <strong>ICS Labs</strong> or <strong>Adversarial ML</strong> threat models.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Global Toast Alert (Non-Intrusive, Replacing standard Alerts) -->
+    <div id="globalToast" class="fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 transition-all duration-300 bg-slate-900 text-white border border-slate-800 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+        <div id="toastIconContainer" class="p-1 rounded-lg bg-cyber-600">
+            <i id="toastIcon" data-lucide="check" class="w-4 h-4 text-white"></i>
+        </div>
+        <p id="toastMessage" class="text-xs font-bold"></p>
+    </div>
+
+    <!-- Core Interactive JavaScript -->
+    <script>
+        // Set dynamic credentials securely as instructed
+        const apiKey = ""; 
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Course Pre-loaded Presets matching the Professor's core domains
+        const PRESETS = {
+            ics: {
+                title: "In-Depth Modbus TCP Command Injection Lab in High-Voltage PLC Nodes",
+                subject: "ICS/SCADA Security",
+                level: "Undergraduate (Junior/Senior)",
+                objectives: [
+                    "Identify structural weaknesses in unencrypted industrial protocols (Modbus TCP)",
+                    "Analyze PCAP logs to isolate anomalous coils and register-write codes",
+                    "Configure security rules using Suricata/Snort to detect unauthorized commands"
+                ],
+                keyTerms: "Modbus TCP, Programmable Logic Controller (PLC), Coil Registers, Function Code 6 & 16, Air-Gapped Network, Out-of-Bounds Payload",
+                pretests: [
+                    "How does Modbus TCP handle authentication at the session layer?",
+                    "What is the significance of Unit Identifier (Unit ID) in PLC addressing?"
+                ],
+                role: "Socratic Tutor / Professor",
+                format: "Immersive Hands-on Lab Assignment & Sandbox tasks"
+            },
+            ai: {
+                title: "Defeating Computer Vision: Evasion and Adversarial Patch Attacks on Autonomous Vehicle ML Models",
+                subject: "AI Security & Adversarial ML",
+                level: "Graduate (MS/PhD)",
+                objectives: [
+                    "Implement FGSM (Fast Gradient Sign Method) algorithm on target neural network architecture",
+                    "Contrast digital evasion attacks with physical adversarial patch triggers",
+                    "Formulate defense layers using robust adversarial training and input sanitization"
+                ],
+                keyTerms: "Adversarial Machine Learning, FGSM, Perturbation Vector, Defense Distillation, Classifier Loss Gradient, Robust Training",
+                pretests: [
+                    "Define the impact of the loss landscape geometry on adversarial attack complexity.",
+                    "Why are traditional deep neural networks highly susceptible to imperceptible noise?"
+                ],
+                role: "Rigorous Exam Evaluator",
+                format: "Detailed Interactive Case Study with unexpected failure modes"
+            },
+            cyber: {
+                title: "Securing Active Directory Domain Controllers from Kerberoasting Actions",
+                subject: "Defensive Cybersecurity",
+                level: "Cybersecurity Professional",
+                objectives: [
+                    "Identify service principal names (SPNs) vulnerable to offline ticket decryption",
+                    "Conduct cryptographic calculations showing structural time-complexity difference of cipher suites",
+                    "Construct hardened group policy configurations (GPOs) blockading legacy DES/RC4 usage"
+                ],
+                keyTerms: "Kerberos TGS-REP, Service Principal Name (SPN), Cryptographic Salt, RC4 Etype 23, Group Policy Hardening, Honey-accounts",
+                pretests: [
+                    "Explain why Kerberoasting operates entirely as a legitimate system request without standard malicious traits.",
+                    "What security benefit does replacing RC4 with AES256-CTS-HMAC-SHA1-96 yield?"
+                ],
+                role: "Socratic Tutor / Professor",
+                format: "Immersive Hands-on Lab Assignment & Sandbox tasks"
+            }
+        };
+
+        // DOM elements
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const presetSelect = document.getElementById('presetSelect');
+        const lessonTitleInput = document.getElementById('lessonTitle');
+        const lessonSubjectSelect = document.getElementById('lessonSubject');
+        const studentLevelSelect = document.getElementById('studentLevel');
+        const keyTermsTextarea = document.getElementById('keyTerms');
+        const promptRoleSelect = document.getElementById('promptRole');
+        const promptFormatSelect = document.getElementById('promptFormat');
+        
+        const addObjectiveBtn = document.getElementById('addObjectiveBtn');
+        const objectivesContainer = document.getElementById('objectivesContainer');
+        const addPretestBtn = document.getElementById('addPretestBtn');
+        const pretestsContainer = document.getElementById('pretestsContainer');
+        
+        const generatePromptBtn = document.getElementById('generatePromptBtn');
+        const promptOutputTextarea = document.getElementById('promptOutputTextarea');
+        const copyPromptBtn = document.getElementById('copyPromptBtn');
+        const executeAIBtn = document.getElementById('executeAIBtn');
+        const copyExecBtn = document.getElementById('copyExecBtn');
+        
+        const tabTemplateBtn = document.getElementById('tabTemplateBtn');
+        const tabExecutionBtn = document.getElementById('tabExecutionBtn');
+        const tabTemplatePanel = document.getElementById('tabTemplatePanel');
+        const tabExecutionPanel = document.getElementById('tabExecutionPanel');
+        
+        const executionConsole = document.getElementById('executionConsole');
+        const executionPlaceholder = document.getElementById('executionPlaceholder');
+        const executionLoading = document.getElementById('executionLoading');
+        const executionResultText = document.getElementById('executionResultText');
+        const toastFeedback = document.getElementById('toastFeedback');
+
+        // Dynamic State Tracker for Dynamic Inputs
+        let objectiveCount = 0;
+        let pretestCount = 0;
+
+        // Theme initialization
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeIcon.setAttribute('data-lucide', 'moon');
+        } else {
+            document.documentElement.classList.add('dark');
+            themeIcon.setAttribute('data-lucide', 'sun');
+        }
+        lucide.createIcons();
+
+        // Theme Switch Action
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                themeIcon.setAttribute('data-lucide', 'moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                themeIcon.setAttribute('data-lucide', 'sun');
+                localStorage.setItem('theme', 'dark');
+            }
+            lucide.createIcons();
+            showToast('Theme switched successfully', 'info');
+        });
+
+        // Tab Navigation Mechanics
+        function switchTab(target) {
+            if (target === 'template') {
+                tabTemplateBtn.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-100 transition";
+                tabExecutionBtn.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition";
+                tabTemplatePanel.classList.remove('hidden');
+                tabExecutionPanel.classList.add('hidden');
+            } else {
+                tabExecutionBtn.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-100 transition";
+                tabTemplateBtn.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition";
+                tabTemplatePanel.classList.add('hidden');
+                tabExecutionPanel.classList.remove('hidden');
+            }
+        }
+        tabTemplateBtn.addEventListener('click', () => switchTab('template'));
+        tabExecutionBtn.addEventListener('click', () => switchTab('execution'));
+
+        // Dynamic Line Builders with appropriate labels for ADA Compliance
+        function addObjectiveRow(value = "") {
+            objectiveCount++;
+            const div = document.createElement('div');
+            div.className = "flex items-center space-x-2 animate-fade-in";
+            div.id = `objective_row_${objectiveCount}`;
+            div.innerHTML = `
+                <input type="text" 
+                       id="objective_input_${objectiveCount}"
+                       value="${value.replace(/"/g, '&quot;')}" 
+                       class="flex-grow bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg py-1.5 px-3 focus:ring-2 focus:ring-brand-600 focus:outline-none text-xs" 
+                       placeholder="e.g. Map attack surface vectors in modbus frame architectures..."
+                       aria-label="Learning objective ${objectiveCount}">
+                <button type="button" onclick="removeObjectiveRow(${objectiveCount})" class="text-rose-500 hover:text-rose-700 p-1.5 focus:outline-none focus:ring-2 focus:ring-rose-500 rounded" aria-label="Delete objective line ${objectiveCount}">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            `;
+            objectivesContainer.appendChild(div);
+            lucide.createIcons();
+        }
+
+        window.removeObjectiveRow = function(id) {
+            const row = document.getElementById(`objective_row_${id}`);
+            if (row) {
+                row.remove();
+            }
+        }
+
+        function addPretestRow(value = "") {
+            pretestCount++;
+            const div = document.createElement('div');
+            div.className = "flex items-center space-x-2";
+            div.id = `pretest_row_${pretestCount}`;
+            div.innerHTML = `
+                <input type="text" 
+                       id="pretest_input_${pretestCount}"
+                       value="${value.replace(/"/g, '&quot;')}" 
+                       class="flex-grow bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg py-1.5 px-3 focus:ring-2 focus:ring-brand-600 focus:outline-none text-xs" 
+                       placeholder="e.g. Contrast differential cryptography models vs Symmetric..."
+                       aria-label="Pretest question ${pretestCount}">
+                <button type="button" onclick="removePretestRow(${pretestCount})" class="text-rose-500 hover:text-rose-700 p-1.5 focus:outline-none focus:ring-2 focus:ring-rose-500 rounded" aria-label="Delete pretest line ${pretestCount}">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            `;
+            pretestsContainer.appendChild(div);
+            lucide.createIcons();
+        }
+
+        window.removePretestRow = function(id) {
+            const row = document.getElementById(`pretest_row_${id}`);
+            if (row) {
+                row.remove();
+            }
+        }
+
+        // Initialize Dynamic Actions
+        addObjectiveBtn.addEventListener('click', () => addObjectiveRow());
+        addPretestBtn.addEventListener('click', () => addPretestRow());
+
+        // Preset Load logic
+        presetSelect.addEventListener('change', (e) => {
+            const presetKey = e.target.value;
+            if (!presetKey) return;
+            const preset = PRESETS[presetKey];
+            
+            // Populate basic fields
+            lessonTitleInput.value = preset.title;
+            lessonSubjectSelect.value = preset.subject;
+            studentLevelSelect.value = preset.level;
+            keyTermsTextarea.value = preset.keyTerms;
+            promptRoleSelect.value = preset.role;
+            promptFormatSelect.value = preset.format;
+
+            // Purge and reload Objective inputs
+            objectivesContainer.innerHTML = "";
+            objectiveCount = 0;
+            preset.objectives.forEach(obj => addObjectiveRow(obj));
+
+            // Purge and reload Pre-test inputs
+            pretestsContainer.innerHTML = "";
+            pretestCount = 0;
+            preset.pretests.forEach(test => addPretestRow(test));
+
+            showToast("Course preset loaded successfully", "success");
+        });
+
+        // Initialize with default template to make the app interactive on first load
+        function loadDefaultSetup() {
+            presetSelect.value = "ics";
+            presetSelect.dispatchEvent(new Event('change'));
+            compilePrompt();
+        }
+
+        // Core prompt structuring compiling logic
+        function compilePrompt() {
+            const title = lessonTitleInput.value.trim() || "Advanced Industrial Systems Intrusion Engineering";
+            const subject = lessonSubjectSelect.value;
+            const level = studentLevelSelect.value;
+            const terms = keyTermsTextarea.value.trim();
+            const role = promptRoleSelect.value;
+            const format = promptFormatSelect.value;
+
+            // Extract objectives from DOM fields
+            const objectives = [];
+            const objInputs = objectivesContainer.querySelectorAll('input');
+            objInputs.forEach(inp => {
+                if(inp.value.trim()) {
+                    objectives.push(inp.value.trim());
+                }
+            });
+
+            // Extract pretest items
+            const pretests = [];
+            const prInputs = pretestsContainer.querySelectorAll('input');
+            prInputs.forEach(inp => {
+                if(inp.value.trim()) {
+                    pretests.push(inp.value.trim());
+                }
+            });
+
+            // Construct Prompt Template using formal AI System Instructions
+            let promptText = `# SYSTEM ASSIGNMENT ROLE
+You are acting as a world-class ${role} specializing in ${subject}. 
+Your target educational audience is strictly at the "${level}" tier. 
+Adopt a highly analytical, academically rigorous, and direct communication tone.
+
+# COURSE DETAILS
+- Lesson Title: ${title}
+- Academic Discipline: ${subject}
+- Targeted Competence Level: ${level}
+
+# CORE LEARNING OBJECTIVES
+By the end of this exercise, students must demonstrate critical proficiency in the following dimensions:\n`;
+
+            if (objectives.length > 0) {
+                objectives.forEach((obj, idx) => {
+                    promptText += `  ${idx + 1}. [Bloom's Target] ${obj}\n`;
+                });
+            } else {
+                promptText += `  - Identify structural vulnerabilities unique to the subject domain.\n  - Apply hardening configurations matching NIST/OWASP guidance.\n`;
+            }
+
+            promptText += `\n# REQUIRED KEY TERMINOLOGY
+The compiled output must explicitly introduce, test, or scaffold around these technical concepts:\n`;
+            if (terms) {
+                terms.split(',').forEach(term => {
+                    promptText += `  - ${term.trim()}\n`;
+                });
+            } else {
+                promptText += `  - SCADA, Modbus, Adversarial Attacks, Defense Distillation\n`;
+            }
+
+            promptText += `\n# PRE-ASSESSMENT (DIAGNOSTIC TEST)
+Before engaging with the primary lab material, evaluate or assume students can answer these exact questions:\n`;
+            if (pretests.length > 0) {
+                pretests.forEach((test, idx) => {
+                    promptText += `  Question ${idx + 1}: ${test}\n`;
+                });
+            } else {
+                promptText += `  Question 1: What is the fundamental protocol format or vulnerability mechanism defining this field?\n`;
+            }
+
+            promptText += `\n# SPECIFIC INSTRUCTIONAL DELIVERABLE
+Your main task is to construct a complete, self-contained "${format}".
+Ensure that you:
+1. Embed multiple layers of technical depth suitable for ${level}.
+2. Provide precise, actionable syntax, diagnostic PCAP references, log traces, or structural code architectures where appropriate.
+3. Incorporate complex failure modes (e.g., unexpected network noise, adversarial evasion, or multi-stage pivot paths) to push critical thinking.
+4. Integrate a marking checklist or evaluation metric mapped directly to the core Learning Objectives.
+
+Begin constructing the educational material below:`;
+
+            promptOutputTextarea.value = promptText;
+        }
+
+        // Action Listener to trigger dynamic rendering
+        generatePromptBtn.addEventListener('click', () => {
+            compilePrompt();
+            showToast("Prompt template generated & updated", "success");
+        });
+
+        // Copy Clipboard logic with standard document.execCommand fallback
+        function handleCopy(textareaElement) {
+            textareaElement.select();
+            textareaElement.setSelectionRange(0, 99999); // Mobile compatibility
+            try {
+                document.execCommand('copy');
+                return true;
+            } catch (err) {
+                console.error('Copy fallback failed', err);
+                return false;
+            }
+        }
+
+        copyPromptBtn.addEventListener('click', () => {
+            const success = handleCopy(promptOutputTextarea);
+            if (success) {
+                toastFeedback.classList.remove('opacity-0');
+                toastFeedback.classList.add('opacity-100');
+                setTimeout(() => {
+                    toastFeedback.classList.remove('opacity-100');
+                    toastFeedback.classList.add('opacity-0');
+                }, 2000);
+                showToast("Copied prompt template!", "success");
+            }
+        });
+
+        copyExecBtn.addEventListener('click', () => {
+            // Select the text internally
+            const range = document.createRange();
+            range.selectNode(executionResultText);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            try {
+                document.execCommand('copy');
+                showToast("Copied generation content!", "success");
+            } catch (e) {
+                showToast("Failed to copy", "error");
+            }
+            window.getSelection().removeAllRanges();
+        });
+
+        // Non-intrusive Accessibility Toast Engine
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('globalToast');
+            const msgEl = document.getElementById('toastMessage');
+            const iconContainer = document.getElementById('toastIconContainer');
+            
+            msgEl.textContent = message;
+            
+            if (type === 'success') {
+                iconContainer.className = "p-1 rounded-lg bg-cyber-600";
+                iconContainer.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-white"></i>`;
+            } else if (type === 'error') {
+                iconContainer.className = "p-1 rounded-lg bg-rose-600";
+                iconContainer.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 text-white"></i>`;
+            } else {
+                iconContainer.className = "p-1 rounded-lg bg-brand-600";
+                iconContainer.innerHTML = `<i data-lucide="info" class="w-4 h-4 text-white"></i>`;
+            }
+            
+            lucide.createIcons();
+            
+            // Slide in animation
+            toast.className = "fixed bottom-5 right-5 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-slate-900 text-white border border-slate-800 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3";
+            
+            setTimeout(() => {
+                toast.className = "fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 transition-all duration-300 bg-slate-900 text-white border border-slate-800 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 pointer-events-none";
+            }, 3000);
+        }
+
+        // ==========================================
+        // Gemini API Execution with Exponential Backoff
+        // ==========================================
+        async function runGeminiGeneration() {
+            // Re-compile dynamic state to verify fresh user settings
+            compilePrompt();
+            
+            const promptContent = promptOutputTextarea.value;
+            if (!promptContent) {
+                showToast("Please compile a prompt template first", "error");
+                return;
+            }
+
+            // Switch UI views to Execution Panel
+            switchTab('execution');
+            executionPlaceholder.classList.add('hidden');
+            executionLoading.classList.remove('hidden');
+            executionResultText.classList.add('hidden');
+            executionResultText.innerHTML = "";
+
+            const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{
+                    parts: [{
+                        text: promptContent
+                    }]
+                }],
+                systemInstruction: {
+                    parts: [{
+                        text: "You are an advanced educator assisting a computer science professor. Generate the requested educational syllabus, guide, rubric, or assignment text in full markdown layout. Do not summarize or use generic placeholders."
+                    }]
+                }
+            };
+
+            // Call API with Exponential Backoff Retries as instructed
+            const maxRetries = 5;
+            let attempt = 0;
+            let success = false;
+            let responseData = null;
+
+            while (attempt < maxRetries && !success) {
+                try {
+                    const response = await fetch(targetUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        responseData = await response.json();
+                        success = true;
+                    } else {
+                        throw new Error(`API error code: ${response.status}`);
+                    }
+                } catch (error) {
+                    attempt++;
+                    if (attempt >= maxRetries) {
+                        executionLoading.classList.add('hidden');
+                        executionPlaceholder.classList.remove('hidden');
+                        showToast("API generation connection failed after 5 retries.", "error");
+                        executionConsole.innerHTML = `
+                            <div class="p-4 border border-rose-900 bg-rose-950/20 text-rose-400 rounded-lg">
+                                <h4 class="font-bold">Execution Failure</h4>
+                                <p class="text-xs mt-1">Unable to contact the AI model. Check your custom environment settings or make sure the network allows endpoints to generativelanguage.googleapis.com.</p>
+                                <button onclick="runGeminiGeneration()" class="mt-3 px-3 py-1.5 bg-rose-800 hover:bg-rose-700 text-white rounded text-xs font-bold transition">
+                                    Retry Connection
+                                </button>
+                            </div>
+                        `;
+                        return;
+                    }
+                    // Wait for exponential backoff: 1s, 2s, 4s, 8s, 16s
+                    const delay = Math.pow(2, attempt - 1) * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+
+            if (success && responseData) {
+                const textOutput = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (textOutput) {
+                    executionLoading.classList.add('hidden');
+                    executionResultText.classList.remove('hidden');
+                    
+                    // Display the resulting content
+                    executionResultText.innerHTML = formatMarkdown(textOutput);
+                    showToast("Coursework successfully created!", "success");
+                } else {
+                    executionLoading.classList.add('hidden');
+                    executionPlaceholder.classList.remove('hidden');
+                    showToast("No content was returned by the AI engine.", "error");
+                }
+            }
+        }
+
+        // Simple and robust parser to display markdown clean and readable
+        function formatMarkdown(text) {
+            let html = text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            // Convert Code blocks
+            html = html.replace(/```(.*?)\n([\s\S]*?)```/g, function(match, lang, code) {
+                return `<pre class="bg-slate-900 border border-slate-800 text-cyan-400 p-4 rounded-lg my-3 font-mono text-xs overflow-x-auto whitespace-pre"><code>${code.trim()}</code></pre>`;
+            });
+
+            // Headers
+            html = html.replace(/^### (.*$)/gim, '<h4 class="text-md font-bold mt-4 text-brand-400">$1</h4>');
+            html = html.replace(/^## (.*$)/gim, '<h3 class="text-lg font-bold mt-5 mb-2 text-brand-300 border-b border-slate-800 pb-1">$1</h3>');
+            html = html.replace(/^# (.*$)/gim, '<h2 class="text-xl font-black mt-6 mb-3 text-white">$1</h2>');
+
+            // Bold
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-white">$1</strong>');
+
+            // Bullet points
+            html = html.replace(/^\s*-\s*(.*$)/gim, '<li class="ml-4 list-disc text-slate-300 mt-1">$1</li>');
+
+            return html;
+        }
+
+        // Event handler connection for Prompt Execution
+        executeAIBtn.addEventListener('click', runGeminiGeneration);
+
+        // Run default state load on load event
+        window.onload = function() {
+            loadDefaultSetup();
+        };
+    </script>
+</body>
+</html>
+
+```
